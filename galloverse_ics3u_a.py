@@ -264,6 +264,22 @@ sidewalk_lines1 = 0
 sidewalk_lines2 = 0
 
 #-------------------
+
+#Jaden To----------------
+def __init__(self, x_to, y_to):
+self.rect = self.image.get_rect(topleft=(x_to, y_to))
+x_to = random.randint(0, SCREEN_WIDTH - CLOUD_WIDTH)
+y_to = random.randint(50, SCREEN_HEIGHT - CLOUD_HEIGHT)
+cloud = Cloud(x_to, y_to)
+clouds.add(cloud)
+sun_x_to = -SUN_RADIUS 
+sun_y_to = SCREEN_HEIGHT // 2 
+pygame.draw.circle(screen, YELLOW, (sun_x_to, sun_y_to), SUN_RADIUS)
+ sun_x_to += 2  
+ if sun_x_to > SCREEN_WIDTH + SUN_RADIUS:
+sun_x_to = -SUN_RADIUS  
+#-------------------
+
 running = True
 while running:
     # GALLO VERSE SPECIFIC ----------------------------------------------------------------
@@ -766,6 +782,26 @@ while running:
     #Space Ship
     pygame.draw.polygon(screen, (tri_r_lam, tri_g_lam, tri_b_lam), [(x+tri_x_lam, y+tri_y_lam+150), (x+tri_x_lam, y+tri_y_lam+200), (x+tri_x_lam+100, y+tri_y_lam+175)])
     
+        
+    # ----------------------------------------------------------------------------------------
+
+    # Must have these coordinates
+    x = 1920
+    y = 1440
+    width = 640
+    height = 480
+
+    frames_gallo += 1
+    text_scale_gallo = abs((math.sin(frames_gallo / 30) - 3) / 3)
+    
+
+    # Rather than screen.fill, draw a rectangle
+    screen.blit(bg_gallo, (x, y))
+
+    screen.blit(welcome_text_gallo, (x + width//2 - welcome_text_gallo.get_width()//2, y + height//3 - welcome_text_gallo.get_height()//2))
+    scaled_text = pygame.transform.scale(text_gallo, (text_gallo.get_width() * text_scale_gallo, text_gallo.get_height() * text_scale_gallo))
+    screen.blit(scaled_text, (x + width//2 - scaled_text.get_width()//2, y + height//2 - scaled_text.get_height()//2))
+
     # Christian -------------------------------------------------------------------------------------
     x = 3840
     y = 2880
@@ -828,6 +864,8 @@ while running:
         (x+350, y+229)
     ]
     pygame.draw.polygon(screen, (0, 0, 0), road_center_matros)
+
+
 
     # Car 1
     car_body_matros = [
@@ -929,25 +967,63 @@ while running:
     pygame.draw.polygon(screen, (255, 0, 0), b_car_backlight1)
     pygame.draw.polygon(screen, (255, 0, 0), b_car_backlight2)
     pygame.draw.polygon(screen, (0, 0, 99), b_car_windshield)
-    
-    # ----------------------------------------------------------------------------------------
+    #Jaden To------------------------------------------------
+    SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 
-    # Must have these coordinates
-    x = 1920
-    y = 1440
-    width = 640
-    height = 480
+SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
+SUN_RADIUS = 100
+YELLOW = (255, 255, 0)
 
-    frames_gallo += 1
-    text_scale_gallo = abs((math.sin(frames_gallo / 30) - 3) / 3)
-    
+SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
+CLOUD_WIDTH, CLOUD_HEIGHT = 200, 80
+WHITE = (255, 255, 255)
 
-    # Rather than screen.fill, draw a rectangle
-    screen.blit(bg_gallo, (x, y))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Animated Sun in Pygame")
 
-    screen.blit(welcome_text_gallo, (x + width//2 - welcome_text_gallo.get_width()//2, y + height//3 - welcome_text_gallo.get_height()//2))
-    scaled_text = pygame.transform.scale(text_gallo, (text_gallo.get_width() * text_scale_gallo, text_gallo.get_height() * text_scale_gallo))
-    screen.blit(scaled_text, (x + width//2 - scaled_text.get_width()//2, y + height//2 - scaled_text.get_height()//2))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Clouds in Pygame")
+
+class Cloud(pygame.sprite.Sprite):
+    def __init__(self, x_to, y_to):
+        super().__init__()
+        self.image = pygame.Surface((CLOUD_WIDTH, CLOUD_HEIGHT), pygame.SRCALPHA)
+        pygame.draw.circle(self.image, WHITE, (50, 50), 50)
+        pygame.draw.circle(self.image, WHITE, (150, 50), 50)
+        pygame.draw.circle(self.image, WHITE, (100, 50), 70)
+        self.rect = self.image.get_rect(topleft=(x_to, y_to))
+
+clouds = pygame.sprite.Group()
+for _ in range(5):
+    x_to = random.randint(0, SCREEN_WIDTH - CLOUD_WIDTH)
+    y_to = random.randint(50, SCREEN_HEIGHT - CLOUD_HEIGHT)
+    cloud = Cloud(x_to, y_to)
+    clouds.add(cloud)
+
+
+
+sun_x_to = -SUN_RADIUS 
+sun_y_to = SCREEN_HEIGHT // 2 
+
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            
+
+    screen.fill((135, 206, 250)) 
+
+    pygame.draw.circle(screen, YELLOW, (sun_x_to, sun_y_to), SUN_RADIUS)
+
+    clouds.update()
+    clouds.draw(screen)
+
+    sun_x_to += 2  
+
+    if sun_x_to > SCREEN_WIDTH + SUN_RADIUS:
+        sun_x_to = -SUN_RADIUS  
 
 
     # LEAVE HERE --------------------------------------------
